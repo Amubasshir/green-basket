@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,8 +10,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LayoutGrid, Search, ShoppingBag } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import GlobalApi from "../_utils/GlobalApi";
 
 const Header = () => {
+  const [categoryList, setCategoryList] = useState([]);
+  useEffect(() => {
+    getCategoryList();
+  }, []);
+
+  const getCategoryList = () => {
+    GlobalApi.getCategory().then((res) => {
+      console.log(res.data.data);
+      setCategoryList(res.data.data);
+    });
+  };
   return (
     <div className="flex justify-between p-5 shadow-md">
       <div className="flex items-center gap-8">
@@ -25,10 +39,26 @@ const Header = () => {
           <DropdownMenuContent className="hidden flex-col sm:flex">
             <DropdownMenuLabel>Browse Category</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuItem>Team</DropdownMenuItem>
-            <DropdownMenuItem>Subscription</DropdownMenuItem>
+
+            {categoryList.map((category, index) => (
+              <DropdownMenuItem key={index}>
+                {Array.isArray(category?.attributes?.icon?.data) &&
+                  category?.attributes?.icon?.data.length > 0 && (
+                    <Image
+                      src={
+                        process.env.NEXT_PUBLIC_BACKEND_BASE_URL +
+                        category?.attributes?.icon?.data[0]?.attributes?.url
+                      }
+                      unoptimized={true}
+                      alt="icon"
+                      width={30}
+                      height={30}
+                    />
+                  )}
+
+                <h2>{category?.attributes?.name}</h2>
+              </DropdownMenuItem>
+            ))}
           </DropdownMenuContent>
         </DropdownMenu>
 
