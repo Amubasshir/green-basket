@@ -36,12 +36,15 @@ const Header = () => {
               <LayoutGrid className="h-5 w-5" /> Category
             </h2>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="hidden flex-col sm:flex">
+          <DropdownMenuContent className="hidden flex-col px-2 sm:flex">
             <DropdownMenuLabel>Browse Category</DropdownMenuLabel>
             <DropdownMenuSeparator />
 
             {categoryList.map((category, index) => (
-              <DropdownMenuItem key={index}>
+              <DropdownMenuItem
+                key={index}
+                className="flex cursor-pointer items-center gap-3"
+              >
                 {Array.isArray(category?.attributes?.icon?.data) &&
                   category?.attributes?.icon?.data.length > 0 && (
                     <Image
@@ -56,7 +59,7 @@ const Header = () => {
                     />
                   )}
 
-                <h2>{category?.attributes?.name}</h2>
+                <h2 className="text-lg">{category?.attributes?.name}</h2>
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
