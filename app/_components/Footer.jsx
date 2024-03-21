@@ -152,7 +152,7 @@ const Footer = () => {
               <ul className="mt-6 space-y-1">
                 <li>
                   <a
-                    className="text-gray-700 transition hover:text-gray-700/75"
+                    className="text-gray-500 transition hover:text-gray-700"
                     href="#"
                   >
                     Home Delivery
@@ -161,7 +161,7 @@ const Footer = () => {
 
                 <li>
                   <a
-                    className="text-gray-700 transition hover:text-gray-700/75"
+                    className="text-gray-500 transition hover:text-gray-700"
                     href="#"
                   >
                     Express Delivery
@@ -170,7 +170,7 @@ const Footer = () => {
 
                 <li>
                   <a
-                    className="text-gray-700 transition hover:text-gray-700/75"
+                    className="text-gray-500 transition hover:text-gray-700"
                     href="#"
                   >
                     Subscription Services
@@ -179,7 +179,7 @@ const Footer = () => {
 
                 <li>
                   <a
-                    className="text-gray-700 transition hover:text-gray-700/75"
+                    className="text-gray-500 transition hover:text-gray-700"
                     href="#"
                   >
                     Customized Orders
@@ -194,7 +194,7 @@ const Footer = () => {
               <ul className="mt-6 space-y-1">
                 <li>
                   <a
-                    className="text-gray-700 transition hover:text-gray-700/75"
+                    className="text-gray-500 transition hover:text-gray-700"
                     href="#"
                   >
                     About
@@ -203,7 +203,7 @@ const Footer = () => {
 
                 <li>
                   <a
-                    className="text-gray-700 transition hover:text-gray-700/75"
+                    className="text-gray-500 transition hover:text-gray-700"
                     href="#"
                   >
                     Careers
@@ -212,7 +212,7 @@ const Footer = () => {
 
                 <li>
                   <a
-                    className="text-gray-700 transition hover:text-gray-700/75"
+                    className="text-gray-500 transition hover:text-gray-700"
                     href="#"
                   >
                     History
@@ -221,7 +221,7 @@ const Footer = () => {
 
                 <li>
                   <a
-                    className="text-gray-700 transition hover:text-gray-700/75"
+                    className="text-gray-500 transition hover:text-gray-700"
                     href="#"
                   >
                     Our Team
@@ -236,7 +236,7 @@ const Footer = () => {
               <ul className="mt-6 space-y-1">
                 <li>
                   <a
-                    className="text-gray-700 transition hover:text-gray-700/75"
+                    className="text-gray-500 transition hover:text-gray-700"
                     href="#"
                   >
                     FAQs
@@ -245,7 +245,7 @@ const Footer = () => {
 
                 <li>
                   <a
-                    className="text-gray-700 transition hover:text-gray-700/75"
+                    className="text-gray-500 transition hover:text-gray-700"
                     href="#"
                   >
                     Contact
@@ -254,7 +254,7 @@ const Footer = () => {
 
                 <li>
                   <a
-                    className="text-gray-700 transition hover:text-gray-700/75"
+                    className="text-gray-500 transition hover:text-gray-700"
                     href="#"
                   >
                     Live Chat
