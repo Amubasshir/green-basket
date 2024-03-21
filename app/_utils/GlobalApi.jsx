@@ -13,5 +13,9 @@ const getSliders = () =>
   axiosClient.get("/sliders?populate=*").then((res) => {
     return res.data.data;
   });
+const getAllProducts = () =>
+  axiosClient.get("/products?populate=*").then((res) => {
+    return res.data.data;
+  });
 
-export default { getCategory, getSliders, getCategoryList };
+export default { getCategory, getSliders, getCategoryList, getAllProducts };
