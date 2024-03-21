@@ -45,19 +45,24 @@ const Header = () => {
                 key={index}
                 className="flex cursor-pointer items-center gap-3"
               >
-                {Array.isArray(category?.attributes?.icon?.data) &&
-                  category?.attributes?.icon?.data.length > 0 && (
+                {Array.isArray(category.attributes?.icon?.data) &&
+                category.attributes.icon.data.length > 0 ? (
+                  category.attributes.icon.data.map((imageData, imageIndex) => (
                     <Image
+                      key={imageIndex}
                       src={
                         process.env.NEXT_PUBLIC_BACKEND_BASE_URL +
-                        category?.attributes?.icon?.data[0]?.attributes?.url
+                        imageData.attributes?.url
                       }
                       unoptimized={true}
                       alt="icon"
                       width={30}
                       height={30}
                     />
-                  )}
+                  ))
+                ) : (
+                  <div>No image data available</div>
+                )}
 
                 <h2 className="text-lg">{category?.attributes?.name}</h2>
               </DropdownMenuItem>
