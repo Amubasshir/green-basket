@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LayoutGrid, Search, ShoppingBag } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import GlobalApi from "../_utils/GlobalApi";
 
@@ -21,7 +22,6 @@ const Header = () => {
 
   const getCategoryList = () => {
     GlobalApi.getCategory().then((res) => {
-      console.log(res.data.data);
       setCategoryList(res.data.data);
     });
   };
@@ -41,31 +41,35 @@ const Header = () => {
             <DropdownMenuSeparator />
 
             {categoryList.map((category, index) => (
-              <DropdownMenuItem
-                key={index}
-                className="flex cursor-pointer items-center gap-3"
-              >
-                {Array.isArray(category.attributes?.icon?.data) &&
-                category.attributes.icon.data.length > 0 ? (
-                  category.attributes.icon.data.map((imageData, imageIndex) => (
-                    <Image
-                      key={imageIndex}
-                      src={
-                        process.env.NEXT_PUBLIC_BACKEND_BASE_URL +
-                        imageData.attributes?.url
-                      }
-                      unoptimized={true}
-                      alt="icon"
-                      width={30}
-                      height={30}
-                    />
-                  ))
-                ) : (
-                  <div>No image data available</div>
-                )}
+              <Link href={"/products-category/" + category.attributes.name}>
+                <DropdownMenuItem
+                  key={index}
+                  className="flex cursor-pointer items-center gap-3"
+                >
+                  {Array.isArray(category.attributes?.icon?.data) &&
+                  category.attributes.icon.data.length > 0 ? (
+                    category.attributes.icon.data.map(
+                      (imageData, imageIndex) => (
+                        <Image
+                          key={imageIndex}
+                          src={
+                            process.env.NEXT_PUBLIC_BACKEND_BASE_URL +
+                            imageData.attributes?.url
+                          }
+                          unoptimized={true}
+                          alt="icon"
+                          width={30}
+                          height={30}
+                        />
+                      ),
+                    )
+                  ) : (
+                    <div>No image data available</div>
+                  )}
 
-                <h2 className="text-lg">{category?.attributes?.name}</h2>
-              </DropdownMenuItem>
+                  <h2 className="text-lg">{category?.attributes?.name}</h2>
+                </DropdownMenuItem>
+              </Link>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
