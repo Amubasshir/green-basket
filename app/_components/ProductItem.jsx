@@ -50,7 +50,7 @@ const ProductItem = ({ product }) => {
         <DialogContent>
           <DialogHeader>
             <DialogDescription>
-              <ProductItemDetails />
+              <ProductItemDetails product={product} />
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
