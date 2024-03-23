@@ -1,17 +1,52 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ShoppingBasket } from "lucide-react";
+import { LoaderCircle, ShoppingBasket } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
+import GlobalApi from "../_utils/GlobalApi";
 
 const ProductItemDetails = ({ product }) => {
+  const jwt = sessionStorage.getItem("jwt");
+  const user = JSON.parse(sessionStorage.getItem("user"));
   const [productTotalPrice, setProductTotalPrice] = useState(
     product.attributes.sellingPrice
       ? product.attributes.sellingPrice
       : product.attributes.mrp,
   );
+  const router = useRouter();
   const [quantity, setQuantity] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const addToCart = () => {
+    setLoading(true);
+    if (!jwt) {
+      router.push("/sign-in");
+      setLoading(false);
+    }
+    const data = {
+      data: {
+        quantity: quantity,
+        amount: quantity * productTotalPrice,
+        product: product.id,
+        users_permissions_user: user.id,
+        userId: user.id,
+      },
+    };
+    console.log(data);
+    GlobalApi.addToCart(data, jwt).then(
+      (res) => {
+        console.log(res);
+        toast("Added to cart");
+        setLoading(false);
+      },
+      (e) => {
+        toast("Error while adding to cart");
+        setLoading(false);
+      },
+    );
+  };
   return (
     <div className="grid grid-cols-1 bg-white p-7 text-[#333] md:grid-cols-2">
       <Image
@@ -62,9 +97,17 @@ const ProductItemDetails = ({ product }) => {
               =&nbsp;${(quantity * productTotalPrice).toFixed(2)}
             </h2>
           </div>
-          <Button>
+          <Button
+            className="flex items-center gap-[10px]"
+            onClick={() => addToCart()}
+            disabled={loading}
+          >
             <ShoppingBasket />
-            Add To Cart
+            {loading ? (
+              <LoaderCircle className="animate-spin" />
+            ) : (
+              "Add To Cart"
+            )}
           </Button>
         </div>
         <h2>

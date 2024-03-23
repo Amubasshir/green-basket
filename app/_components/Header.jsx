@@ -19,9 +19,15 @@ import GlobalApi from "../_utils/GlobalApi";
 const Header = () => {
   const [categoryList, setCategoryList] = useState([]);
   const loggedIn = sessionStorage.getItem("jwt") ? true : false;
+  const jwt = sessionStorage.getItem("jwt");
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  const [totalCartItem, setTotalCartItem] = useState(0);
   const router = useRouter();
   useEffect(() => {
     getCategoryList();
+  }, []);
+  useEffect(() => {
+    getCartItems();
   }, []);
 
   const getCategoryList = () => {
@@ -34,8 +40,13 @@ const Header = () => {
     sessionStorage.clear();
     router.push("/sign-in");
   };
+
+  const getCartItems = async () => {
+    const cartItemList = await GlobalApi.getCartItems(user.id, jwt);
+    setTotalCartItem(cartItemList?.length);
+  };
   return (
-    <div className="flex justify-between p-5 shadow-md">
+    <div className="flex justify-between gap-3 p-5 shadow-md">
       <div className="flex items-center gap-8">
         <Link href={"/"}>
           <Image src="/logo.png" alt="logo" width={150} height={100} />
@@ -90,7 +101,10 @@ const Header = () => {
       </div>
       <div className="flex items-center gap-5">
         <h2 className="flex items-center gap-2 text-lg">
-          <ShoppingBag />0
+          <ShoppingBag />
+          <span className="rounded-full bg-primary px-2 text-white">
+            {totalCartItem}
+          </span>
         </h2>
         {!loggedIn ? (
           <Link href={"/sign-in"}>
