@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const CreateAccount = () => {
@@ -13,6 +13,12 @@ const CreateAccount = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const router = useRouter();
+  useEffect(() => {
+    const jwt = sessionStorage.getItem("jwt");
+    if (jwt) {
+      router.push("/");
+    }
+  }, []);
   const onCreateAccount = () => {
     GlobalApi.registerUser(username, email, password).then(
       (res) => {

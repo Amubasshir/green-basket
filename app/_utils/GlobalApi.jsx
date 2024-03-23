@@ -31,6 +31,12 @@ const registerUser = (username, email, password) =>
     password: password,
   });
 
+const SignIn = (email, password) =>
+  axiosClient.post("/auth/local", {
+    identifier: email,
+    password: password,
+  });
+
 export default {
   getCategory,
   getSliders,
@@ -38,4 +44,5 @@ export default {
   getAllProducts,
   getProductsByCategory,
   registerUser,
+  SignIn,
 };
