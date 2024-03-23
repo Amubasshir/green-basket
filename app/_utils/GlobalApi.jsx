@@ -24,10 +24,18 @@ const getProductsByCategory = (category) =>
       return res.data.data;
     });
 
+const registerUser = (username, email, password) =>
+  axiosClient.post("/auth/local/register", {
+    username: username,
+    email: email,
+    password: password,
+  });
+
 export default {
   getCategory,
   getSliders,
   getCategoryList,
   getAllProducts,
   getProductsByCategory,
+  registerUser,
 };
