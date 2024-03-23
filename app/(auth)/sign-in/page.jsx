@@ -2,6 +2,7 @@
 import GlobalApi from "@/app/_utils/GlobalApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { LoaderIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,6 +13,7 @@ const SignIn = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const router = useRouter();
+  const [loader, setLoader] = useState();
 
   useEffect(() => {
     const fetchJwt = async () => {
@@ -25,6 +27,7 @@ const SignIn = () => {
     fetchJwt();
   }, []);
   const onSignIn = () => {
+    setLoader(true);
     GlobalApi.SignIn(email, password).then(
       (res) => {
         console.log(res.data.user);
@@ -33,10 +36,12 @@ const SignIn = () => {
         sessionStorage.setItem("jwt", res.data.jwt);
         toast("Sign in successfully.");
         router.push("/");
+        setLoader(false);
       },
       (e) => {
         console.log(e);
-        toast("Server Error!!!");
+        toast(e?.response?.data?.error?.message);
+        setLoader(false);
       },
     );
   };
@@ -49,11 +54,6 @@ const SignIn = () => {
           Enter your email and password to sign in
         </h2>
         <div className="mt-7 flex w-full flex-col gap-5 ">
-          {/* <Input
-            placeholder="Username"
-            className="outline-none"
-            onChange={(e) => setUserName(e.target.value)}
-          /> */}
           <Input
             placeholder="name@example.com"
             className="outline-none"
@@ -66,7 +66,7 @@ const SignIn = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <Button onClick={() => onSignIn()} disabled={!(email || password)}>
-            sign in
+            {loader ? <LoaderIcon className="animate-spin" /> : "Sign In"}
           </Button>
           <p>
             Don't have an account? &nbsp;
