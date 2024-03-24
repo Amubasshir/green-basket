@@ -22,9 +22,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { UpdateCartContext } from "../_context/UpdateCartContext";
 import GlobalApi from "../_utils/GlobalApi";
+import CartItemList from "./CartItemList";
 
 const Header = () => {
   const [categoryList, setCategoryList] = useState([]);
@@ -61,6 +63,14 @@ const Header = () => {
     setCartItemList(cartItemList_);
     console.log(cartItemList_);
   };
+
+  const onDeleteItem = (id) => {
+    GlobalApi.deleteCartItem(id, jwt).then((res) => {
+      toast("Item removed!!!");
+      getCartItems();
+    });
+  };
+
   return (
     <div className="flex justify-between gap-3 p-5 shadow-md">
       <div className="flex items-center gap-8">
@@ -127,10 +137,14 @@ const Header = () => {
           </SheetTrigger>
           <SheetContent>
             <SheetHeader>
-              <SheetTitle>Are you absolutely sure?</SheetTitle>
+              <SheetTitle className="mt-4 bg-primary p-2 text-lg font-bold text-white">
+                My Cart
+              </SheetTitle>
               <SheetDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
+                <CartItemList
+                  cartItemList={cartItemList}
+                  onDeleteItem={onDeleteItem}
+                />
               </SheetDescription>
             </SheetHeader>
           </SheetContent>
