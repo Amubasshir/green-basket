@@ -6,13 +6,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { toast } from "sonner";
-import { updateCartContext } from "../_context/UpdateCartContext";
+import { UpdateCartContext } from "../_context/UpdateCartContext";
 import GlobalApi from "../_utils/GlobalApi";
 
 const ProductItemDetails = ({ product }) => {
   const jwt = sessionStorage.getItem("jwt");
   const user = JSON.parse(sessionStorage.getItem("user"));
-  const [updateCart, setUpdateCart] = useContext(updateCartContext);
+  const { updateCart, setUpdateCart } = useContext(UpdateCartContext);
   const [productTotalPrice, setProductTotalPrice] = useState(
     product.attributes.sellingPrice
       ? product.attributes.sellingPrice
@@ -26,6 +26,7 @@ const ProductItemDetails = ({ product }) => {
     if (!jwt) {
       router.push("/sign-in");
       setLoading(false);
+      return;
     }
     const data = {
       data: {
@@ -40,8 +41,8 @@ const ProductItemDetails = ({ product }) => {
     GlobalApi.addToCart(data, jwt).then(
       (res) => {
         console.log(res);
-        toast("Added to cart");
         setUpdateCart(!updateCart);
+        toast("Added to cart");
         setLoading(false);
       },
       (e) => {

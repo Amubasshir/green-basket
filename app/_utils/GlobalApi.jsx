@@ -46,7 +46,7 @@ const addToCart = (data, jwt) =>
 
 const getCartItems = (userId, jwt) =>
   axiosClient
-    .get("/user-carts?filter[userId][$eq]='+userId+'&populate=*", {
+    .get("/user-carts?filter[userId][$eq]=" + userId + "&populate=*", {
       headers: {
         Authorization: "Bearer " + jwt,
       },

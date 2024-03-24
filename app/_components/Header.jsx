@@ -14,7 +14,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { updateCartContext } from "../_context/UpdateCartContext";
+import { UpdateCartContext } from "../_context/UpdateCartContext";
 import GlobalApi from "../_utils/GlobalApi";
 
 const Header = () => {
@@ -23,8 +23,7 @@ const Header = () => {
   const jwt = sessionStorage.getItem("jwt");
   const user = JSON.parse(sessionStorage.getItem("user"));
   const [totalCartItem, setTotalCartItem] = useState(0);
-  const contextValue = useContext(updateCartContext);
-  const [updateCart, setUpdateCart] = contextValue ?? [null, () => {}];
+  const { updateCart, setUpdateCart } = useContext(UpdateCartContext);
 
   const router = useRouter();
 

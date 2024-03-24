@@ -4,7 +4,7 @@ import { Outfit } from "next/font/google";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Header from "./_components/Header";
-import { updateCartContext } from "./_context/UpdateCartContext";
+import { UpdateCartContext } from "./_context/UpdateCartContext";
 import "./globals.css";
 
 const outfit = Outfit({ subsets: ["latin"] });
@@ -22,11 +22,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={outfit.className}>
-        <updateCartContext.Provider values={{ updateCart, setUpdateCart }}>
+        <UpdateCartContext.Provider value={{ updateCart, setUpdateCart }}>
           {showHeader && <Header />}
           {children}
           <Toaster />
-        </updateCartContext.Provider>
+        </UpdateCartContext.Provider>
       </body>
     </html>
   );
