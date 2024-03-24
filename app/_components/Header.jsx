@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -70,6 +71,15 @@ const Header = () => {
       getCartItems();
     });
   };
+
+  const [subtotal, setSubtotal] = useState(0);
+  useEffect(() => {
+    let total = 0;
+    cartItemList.forEach((element) => {
+      total = total + element.amount;
+    });
+    setSubtotal(total.toFixed(2));
+  }, [cartItemList]);
 
   return (
     <div className="flex justify-between gap-3 p-5 shadow-md">
@@ -147,6 +157,18 @@ const Header = () => {
                 />
               </SheetDescription>
             </SheetHeader>
+            <SheetClose asChild>
+              <div className="absolute bottom-6 flex w-[90%] flex-col">
+                <h2 className="flex justify-between px-2 text-lg font-bold">
+                  Subtotal <span>${subtotal}</span>
+                </h2>
+                <Button
+                  onClick={() => router.push(jwt ? "/checkout" : "/sign-in")}
+                >
+                  Checkout
+                </Button>
+              </div>
+            </SheetClose>
           </SheetContent>
         </Sheet>
 
