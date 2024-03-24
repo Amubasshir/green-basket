@@ -12,9 +12,9 @@ const CategoryList = ({ categoryList }) => {
             key={index}
             className="group flex cursor-pointer flex-col items-center gap-2 rounded-lg bg-green-50 p-3 hover:bg-green-200"
           >
-            {Array.isArray(category.attributes?.icon?.data) &&
-            category.attributes.icon.data.length > 0 ? (
-              category.attributes.icon.data.map((imageData, imageIndex) => (
+            {Array.isArray(category.attributes?.image?.data) &&
+            category.attributes.image.data.length > 0 ? (
+              category.attributes.image.data.map((imageData, imageIndex) => (
                 <Image
                   key={imageIndex}
                   src={

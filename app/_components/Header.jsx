@@ -8,6 +8,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+
 import { CircleUserRound, LayoutGrid, Search, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,6 +32,7 @@ const Header = () => {
   const jwt = sessionStorage.getItem("jwt");
   const user = JSON.parse(sessionStorage.getItem("user"));
   const [totalCartItem, setTotalCartItem] = useState(0);
+  const [cartItemList, setCartItemList] = useState([]);
   const { updateCart, setUpdateCart } = useContext(UpdateCartContext);
 
   const router = useRouter();
@@ -46,8 +56,10 @@ const Header = () => {
   };
 
   const getCartItems = async () => {
-    const cartItemList = await GlobalApi.getCartItems(user.id, jwt);
-    setTotalCartItem(cartItemList?.length);
+    const cartItemList_ = await GlobalApi.getCartItems(user.id, jwt);
+    setTotalCartItem(cartItemList_?.length);
+    setCartItemList(cartItemList_);
+    console.log(cartItemList_);
   };
   return (
     <div className="flex justify-between gap-3 p-5 shadow-md">
@@ -104,12 +116,26 @@ const Header = () => {
         </div>
       </div>
       <div className="flex items-center gap-5">
-        <h2 className="flex items-center gap-2 text-lg">
-          <ShoppingBag />
-          <span className="rounded-full bg-primary px-2 text-white">
-            {totalCartItem}
-          </span>
-        </h2>
+        <Sheet>
+          <SheetTrigger>
+            <h2 className="flex items-center gap-2 text-lg">
+              <ShoppingBag />
+              <span className="rounded-full bg-primary px-2 text-white">
+                {totalCartItem}
+              </span>
+            </h2>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Are you absolutely sure?</SheetTitle>
+              <SheetDescription>
+                This action cannot be undone. This will permanently delete your
+                account and remove your data from our servers.
+              </SheetDescription>
+            </SheetHeader>
+          </SheetContent>
+        </Sheet>
+
         {!loggedIn ? (
           <Link href={"/sign-in"}>
             <Button>Login</Button>

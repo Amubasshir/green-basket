@@ -46,13 +46,28 @@ const addToCart = (data, jwt) =>
 
 const getCartItems = (userId, jwt) =>
   axiosClient
-    .get("/user-carts?filter[userId][$eq]=" + userId + "&populate=*", {
-      headers: {
-        Authorization: "Bearer " + jwt,
+    .get(
+      "/user-carts?filter[userId][$eq]=" +
+        userId +
+        "&[populate][product][populate][images][populate][0]=url",
+      {
+        headers: {
+          Authorization: "Bearer " + jwt,
+        },
       },
-    })
+    )
     .then((res) => {
-      return res.data.data;
+      const data = res.data.data;
+      const cartItemsList = data.map((item, index) => ({
+        name: item.attributes.product.data.attributes.name,
+        quantity: item.attributes.quantity,
+        amount: item.attributes.amount,
+        Image:
+          item.attributes.product.data.attributes.images.data[0].attributes.url,
+        actualPrice: item.attributes.product.data.attributes.mrp,
+        id: item.id,
+      }));
+      return cartItemsList;
     });
 
 export default {

@@ -25,7 +25,7 @@ const Slider = ({ sliderList }) => {
                   width={1000}
                   height={400}
                   alt={imageData.attributes.name}
-                  className=" h-[200px] w-full rounded-2xl object-cover md:h-[300px] lg:h-[400px]"
+                  className=" h-[200px] w-full rounded-2xl object-fill md:h-[300px] lg:h-[400px]"
                 />
               ))
             ) : (
