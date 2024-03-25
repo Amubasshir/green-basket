@@ -1,5 +1,6 @@
 "use client";
 import { Toaster } from "@/components/ui/sonner";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { Outfit } from "next/font/google";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -20,14 +21,19 @@ export default function RootLayout({ children }) {
   const showHeader =
     params == "/sign-in" || params == "/create-account" ? false : true;
   return (
-    <html lang="en">
-      <body className={outfit.className}>
-        <UpdateCartContext.Provider value={{ updateCart, setUpdateCart }}>
-          {showHeader && <Header />}
-          {children}
-          <Toaster />
-        </UpdateCartContext.Provider>
-      </body>
-    </html>
+    <PayPalScriptProvider
+      options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID }}
+      // options={{ clientId: "test" }}
+    >
+      <html lang="en">
+        <body className={outfit.className}>
+          <UpdateCartContext.Provider value={{ updateCart, setUpdateCart }}>
+            {showHeader && <Header />}
+            {children}
+            <Toaster />
+          </UpdateCartContext.Provider>
+        </body>
+      </html>
+    </PayPalScriptProvider>
   );
 }

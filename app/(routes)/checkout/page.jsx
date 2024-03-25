@@ -1,8 +1,57 @@
-import { Button } from "@/components/ui/button";
+"use client";
+import GlobalApi from "@/app/_utils/GlobalApi";
 import { Input } from "@/components/ui/input";
-import { ArrowBigRight } from "lucide-react";
+import { PayPalButtons } from "@paypal/react-paypal-js";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const Checkout = () => {
+  const jwt = sessionStorage.getItem("jwt");
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  const [totalCartItem, setTotalCartItem] = useState(0);
+  const [cartItemList, setCartItemList] = useState([]);
+  const [subtotal, setSubtotal] = useState(0);
+  const [username, setUsername] = useState();
+  const [email, setEmail] = useState();
+  const [phone, setPhone] = useState();
+  const [zip, setZip] = useState();
+  const [address, setAddress] = useState();
+  const [cartTotalAmount, setCartTotalAmount] = useState(0);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!jwt) {
+      router.push("/sign-in");
+    }
+    getCartItems();
+  }, []);
+
+  const getCartItems = async () => {
+    const cartItemList_ = await GlobalApi.getCartItems(user.id, jwt);
+    setTotalCartItem(cartItemList_?.length);
+    setCartItemList(cartItemList_);
+    console.log(cartItemList_);
+  };
+
+  useEffect(() => {
+    let subtotalAmount = 0;
+    cartItemList.forEach((element) => {
+      subtotalAmount += element.amount;
+    });
+    setSubtotal(subtotalAmount.toFixed(2));
+    const totalAmount = calculateTotalAmount(subtotalAmount);
+    setCartTotalAmount(totalAmount);
+  }, [cartItemList]);
+
+  const calculateTotalAmount = (subtotalAmount) => {
+    const numericSubtotal = parseFloat(subtotalAmount);
+    const tax = totalCartItem * 0.7;
+    const delivery = 15;
+    const totalAmount = numericSubtotal + tax + delivery;
+
+    return totalAmount.toFixed(2);
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <h2 className="bg-primary py-4 text-center text-2xl font-bold text-white">
@@ -13,40 +62,69 @@ const Checkout = () => {
           <div className="col-span-2 md:col-span-1 lg:col-span-2">
             <h3 className="mb-4 text-lg font-bold">Billing Details</h3>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <Input placeholder="Name" />
-              <Input placeholder="Email" />
-              <Input placeholder="Phone" />
-              <Input placeholder="Zip" />
+              <Input
+                placeholder="Name"
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <Input
+                placeholder="Email"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Input
+                placeholder="Phone"
+                onChange={(e) => setPhone(e.target.value)}
+              />
+              <Input
+                placeholder="Zip"
+                onChange={(e) => setZip(e.target.value)}
+              />
             </div>
             <div className="mt-4">
-              <Input placeholder="Address" />
+              <Input
+                placeholder="Address"
+                onChange={(e) => setAddress(e.target.value)}
+              />
             </div>
           </div>
           <div className="col-span-1 rounded-lg bg-white p-6 shadow-md">
-            <h3 className="mb-4 text-lg font-bold">Total Cart (3)</h3>
+            <h3 className="mb-4 text-lg font-bold">
+              Total Cart ({totalCartItem})
+            </h3>
             <div className="space-y-2">
               <div className="flex justify-between font-bold">
                 <span>Subtotal:</span>
-                <span>$25</span>
+                <span>{subtotal}</span>
               </div>
               <div className="flex justify-between">
                 <span>Delivery:</span>
-                <span>$25</span>
+                <span>$15</span>
               </div>
               <div className="flex justify-between">
                 <span>Tax (7%):</span>
-                <span>$25</span>
+                <span>${(totalCartItem * 0.7).toFixed(2)}</span>
               </div>
               <hr className="my-2" />
               <div className="flex justify-between font-bold">
                 <span>Total:</span>
-                <span>$25</span>
+                <span>${cartTotalAmount}</span>
               </div>
             </div>
             <div className="mt-6">
-              <Button className="hover:bg-primary-dark w-full justify-center bg-primary text-white">
-                Payment <ArrowBigRight className="ml-2" />
-              </Button>
+              <PayPalButtons
+                style={{ layout: "horizontal" }}
+                createOrder={(data, actions) => {
+                  return actions.order.create({
+                    purchase_units: [
+                      {
+                        amount: {
+                          value: cartTotalAmount,
+                          currency_code: "USD",
+                        },
+                      },
+                    ],
+                  });
+                }}
+              />
             </div>
           </div>
         </div>
