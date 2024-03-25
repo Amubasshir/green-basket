@@ -97,7 +97,8 @@ const getMyOrder = (userId) =>
         totalOrderAmount: item.attributes.totalOrderAmount,
         paymentId: item.attributes.paymentId,
         orderItemList: item.attributes.orderItemList,
-        createdAt: item.attributes.createAt,
+        createdAt: item.attributes.createdAt,
+        status: item.attributes.status,
       }));
       return orderList;
     })
