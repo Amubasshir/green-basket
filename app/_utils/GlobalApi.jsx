@@ -85,6 +85,27 @@ const createOrder = (data, jwt) =>
     },
   });
 
+const getMyOrder = (userId) =>
+  axiosClient
+    .get(
+      `/orders?filters[userId][$eq]=${userId}&populate[orderItemList][populate][product][populate][images]=url`,
+    )
+    .then((res) => {
+      const response = res.data.data;
+      const orderList = response.map((item) => ({
+        id: item.id,
+        totalOrderAmount: item.attributes.totalOrderAmount,
+        paymentId: item.attributes.paymentId,
+        orderItemList: item.attributes.orderItemList,
+        createdAt: item.attributes.createAt,
+      }));
+      return orderList;
+    })
+    .catch((error) => {
+      console.error("Error fetching orders:", error);
+      throw error;
+    });
+
 export default {
   getCategory,
   getSliders,
@@ -97,4 +118,5 @@ export default {
   getCartItems,
   deleteCartItem,
   createOrder,
+  getMyOrder,
 };

@@ -1,7 +1,10 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const OrderConfirmation = () => {
+  const router = useRouter();
   return (
     <div className="my-20 flex justify-center">
       <div className="flex flex-col items-center justify-center gap-3 rounded-md border p-20 px-32 shadow-md">
@@ -10,7 +13,9 @@ const OrderConfirmation = () => {
           Order Successful!!!
         </h2>
         <h2>Thank you for your order</h2>
-        <Button className="mt-8">Track your order</Button>
+        <Button className="mt-8" onClick={() => router.push("/my-order")}>
+          Track your order
+        </Button>
       </div>
     </div>
   );

@@ -190,9 +190,11 @@ const Header = () => {
               <DropdownMenuItem className="cursor-pointer">
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
-                My Order
-              </DropdownMenuItem>
+              <Link href={"/my-order"}>
+                <DropdownMenuItem className="cursor-pointer">
+                  My Order
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => onSignOut()}
