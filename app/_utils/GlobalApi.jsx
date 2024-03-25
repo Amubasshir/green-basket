@@ -66,12 +66,20 @@ const getCartItems = (userId, jwt) =>
           item.attributes.product.data.attributes.images.data[0].attributes.url,
         actualPrice: item.attributes.product.data.attributes.mrp,
         id: item.id,
+        product: item.attributes.product.data.id,
       }));
       return cartItemsList;
     });
 
 const deleteCartItem = (id, jwt) =>
   axiosClient.delete("/user-carts/" + id, {
+    headers: {
+      Authorization: "Bearer " + jwt,
+    },
+  });
+
+const createOrder = (data, jwt) =>
+  axiosClient.post("/orders", data, {
     headers: {
       Authorization: "Bearer " + jwt,
     },
@@ -88,4 +96,5 @@ export default {
   addToCart,
   getCartItems,
   deleteCartItem,
+  createOrder,
 };

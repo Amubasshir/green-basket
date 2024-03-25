@@ -1,9 +1,11 @@
 "use client";
 import GlobalApi from "@/app/_utils/GlobalApi";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const Checkout = () => {
   const jwt = sessionStorage.getItem("jwt");
@@ -52,6 +54,30 @@ const Checkout = () => {
     return totalAmount.toFixed(2);
   };
 
+  const onApprove = (data) => {
+    const payload = {
+      data: {
+        paymentId: data.paymentId.toString(),
+        totalOrderAmount: calculateTotalAmount(subtotal),
+        username: username,
+        email: email,
+        phone: phone,
+        zip: zip,
+        address: address,
+        orderItemList: cartItemList,
+        userId: user.id,
+      },
+    };
+    GlobalApi.createOrder(payload, jwt).then((res) => {
+      console.log(res);
+      toast("order place successfully");
+      cartItemList.forEach((item, index) => {
+        GlobalApi.deleteCartItem(item.id).then((res) => {});
+      });
+    });
+    router.replace("/order-confirmation");
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <h2 className="bg-primary py-4 text-center text-2xl font-bold text-white">
@@ -86,11 +112,13 @@ const Checkout = () => {
               />
             </div>
           </div>
-          <div className="col-span-1 rounded-lg bg-white p-6 shadow-md">
-            <h3 className="mb-4 text-lg font-bold">
-              Total Cart ({totalCartItem})
-            </h3>
-            <div className="space-y-2">
+          <div className="col-span-1 rounded-lg bg-white  shadow-md">
+            <div className="rounded-t-lg bg-gray-200 p-4">
+              <h3 className="text-center text-lg font-bold">
+                Total Cart ({totalCartItem})
+              </h3>
+            </div>
+            <div className="space-y-2 px-4 py-4">
               <div className="flex justify-between font-bold">
                 <span>Subtotal:</span>
                 <span>{subtotal}</span>
@@ -109,7 +137,14 @@ const Checkout = () => {
                 <span>${cartTotalAmount}</span>
               </div>
             </div>
-            <div className="mt-6">
+            <div className="mt-6 space-y-2 px-4 py-4">
+              <Button
+                className="w-full"
+                onClick={() => onApprove({ paymentId: 123 })}
+                disabled={!(username && email && address && zip)}
+              >
+                Payment
+              </Button>
               <PayPalButtons
                 style={{ layout: "horizontal" }}
                 createOrder={(data, actions) => {
