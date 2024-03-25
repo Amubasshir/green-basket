@@ -104,21 +104,24 @@ const Header = () => {
                   key={uuidv4()}
                   className="flex cursor-pointer items-center gap-3"
                 >
-                  {Array.isArray(category.attributes?.icon?.data) &&
-                  category.attributes.icon.data.length > 0 ? (
-                    category.attributes.icon.data.map((imageData, Index) => (
-                      <Image
-                        key={uuidv4()}
-                        src={
-                          process.env.NEXT_PUBLIC_BACKEND_BASE_URL +
-                          imageData.attributes?.url
-                        }
-                        unoptimized={true}
-                        alt="icon"
-                        width={30}
-                        height={30}
-                      />
-                    ))
+                  {Array.isArray(category.attributes?.image?.data) &&
+                  category.attributes.image.data.length > 0 ? (
+                    category.attributes.image.data.map(
+                      (imageData, imageIndex) => (
+                        <Image
+                          key={imageIndex}
+                          src={
+                            process.env.NEXT_PUBLIC_BACKEND_BASE_URL +
+                            imageData.attributes?.url
+                          }
+                          unoptimized={true}
+                          alt="icon"
+                          width={30}
+                          height={30}
+                          className="transition-all ease-out group-hover:scale-125"
+                        />
+                      ),
+                    )
                   ) : (
                     <div>No image data available</div>
                   )}
