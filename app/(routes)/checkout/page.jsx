@@ -8,8 +8,9 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const Checkout = () => {
-  const jwt = sessionStorage.getItem("jwt");
-  const user = JSON.parse(sessionStorage.getItem("user"));
+  const router = useRouter();
+  const [jwt, setJwt] = useState("");
+  const [user, setUser] = useState(null);
   const [totalCartItem, setTotalCartItem] = useState(0);
   const [cartItemList, setCartItemList] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
@@ -19,14 +20,25 @@ const Checkout = () => {
   const [zip, setZip] = useState();
   const [address, setAddress] = useState();
   const [cartTotalAmount, setCartTotalAmount] = useState(0);
-  const router = useRouter();
 
   useEffect(() => {
-    if (!jwt) {
-      router.push("/sign-in");
+    if (typeof window !== "undefined") {
+      const jwtFromStorage = sessionStorage.getItem("jwt");
+      const userFromStorage = sessionStorage.getItem("user");
+      if (jwtFromStorage && userFromStorage) {
+        setJwt(jwtFromStorage);
+        setUser(JSON.parse(userFromStorage));
+      } else {
+        router.push("/sign-in");
+      }
     }
-    getCartItems();
-  }, []);
+  }, [router]);
+
+  useEffect(() => {
+    if (jwt) {
+      getCartItems();
+    }
+  }, [jwt]);
 
   const getCartItems = async () => {
     const cartItemList_ = await GlobalApi.getCartItems(user.id, jwt);
@@ -71,9 +83,9 @@ const Checkout = () => {
     GlobalApi.createOrder(payload, jwt).then((res) => {
       console.log(res);
       toast("order place successfully");
-      // cartItemList.forEach((item, index) => {
-      //   GlobalApi.deleteCartItem(item.id).then((res) => {});
-      // });
+      cartItemList.forEach((item, index) => {
+        GlobalApi.deleteCartItem(item.id).then((res) => {});
+      });
     });
     router.replace("/order-confirmation");
   };
